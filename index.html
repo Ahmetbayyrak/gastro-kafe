@@ -1,69 +1,332 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gastro Kafe - Stok & Reçete Takip</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Cafe Stok & Reçete Maliyet ZAYİ Hesaplayıcı</title>
     <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-</head>
-<body class="bg-gray-100 font-sans text-gray-800 pb-20">
+    <style>
+        :root {
+            --bg-body: #f7f4f0;
+            --bg-card: #ffffff;
+            --bg-sidebar: #1e1511;
+            --bg-sidebar-hover: #2d2019;
+            --text-main: #2c221e;
+            --text-muted: #7a6b63;
+            --text-light: #f5efe9;
+            --border-color: #e5dcda;
+            --primary: #c26d38;
+            --primary-hover: #a35626;
+            --accent: #d9822b;
+            --accent-light: #fbf1e8;
+            --danger: #d93838;
+            --danger-bg: #fde8e8;
+            --warning: #e08a00;
+            --warning-bg: #fff5e5;
+            --success: #2b9e59;
+            --success-bg: #e8f7ee;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 14px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
 
-    <!-- Header -->
-    <header class="bg-indigo-600 text-white p-4 shadow-md text-center sticky top-0 z-50">
-        <h1 class="text-xl font-bold">Gastro Kafe - Canlı Stok & Reçete</h1>
-        <div id="status-badge" class="mt-1 text-xs bg-indigo-800 text-indigo-200 inline-block px-3 py-1 rounded-full">
-            Bağlanıyor...
+        [data-theme="dark"] {
+            --bg-body: #140f0d;
+            --bg-card: #201916;
+            --bg-sidebar: #0d0a08;
+            --bg-sidebar-hover: #1c1411;
+            --text-main: #f3ece8;
+            --text-muted: #a0928a;
+            --border-color: #332722;
+            --accent-light: #2c1e16;
+            --danger-bg: #381616;
+            --warning-bg: #38250c;
+            --success-bg: #102d1a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; font-size: 15px; line-height: 1.4; }
+
+        header { background: var(--bg-sidebar); color: var(--text-light); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md); }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; letter-spacing: -0.3px; color: var(--text-light); }
+
+        .app-layout { display: flex; flex: 1; position: relative; }
+        aside { width: 250px; background: var(--bg-sidebar); padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius-sm); color: #b5a59c; background: transparent; border: none; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-align: left; transition: all 0.2s; width: 100%; }
+        .nav-link:hover, .nav-link.active { background: var(--bg-sidebar-hover); color: #ffffff; }
+        .nav-link.active { background: var(--primary); color: #ffffff; }
+
+        .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-sidebar); border-top: 1px solid var(--border-color); z-index: 500; padding: 6px 0; justify-content: space-around; }
+        .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #a0928a; background: none; border: none; font-size: 0.72rem; padding: 6px; cursor: pointer; width: 20%; }
+        .mobile-nav-item.active { color: var(--primary); font-weight: 700; }
+        .mobile-nav-item .icon { font-size: 20px; }
+
+        main { flex: 1; padding: 24px; max-width: 1300px; margin: 0 auto; width: 100%; padding-bottom: 100px; }
+
+        .hero-cta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .cta-card { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-sm); }
+        .cta-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .cta-icon { width: 52px; height: 52px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; color: #fff; }
+        .cta-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 2px; }
+        .cta-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+        .card { background: var(--bg-card); border-radius: var(--radius-md); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+        .card-title { font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
+        
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--primary); }
+        .stat-card.danger::before { background: var(--danger); }
+        .stat-card.warning::before { background: var(--warning); }
+        .stat-card.success::before { background: var(--success); }
+        .stat-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 1.7rem; font-weight: 900; margin: 6px 0; color: var(--text-main); }
+        .stat-sub { font-size: 0.82rem; color: var(--text-muted); }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; min-height: 46px; text-decoration: none; }
+        .btn-primary { background: var(--primary); color: #ffffff; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-danger { background: var(--danger); color: #ffffff; }
+        .btn-success { background: var(--success); color: #ffffff; }
+        .btn-outline { background: transparent; border: 1.5px solid var(--border-color); color: var(--text-main); }
+        .btn-outline:hover { background: var(--accent-light); border-color: var(--primary); }
+        .btn-sm { padding: 6px 12px; min-height: 34px; font-size: 0.85rem; border-radius: var(--radius-sm); }
+
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.88rem; margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.98rem; outline: none; transition: border 0.2s; }
+        .form-control:focus { border-color: var(--primary); }
+
+        .table-wrap { overflow-x: auto; margin-top: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem; }
+        th { background: var(--accent-light); padding: 12px 16px; font-weight: 800; border-bottom: 2px solid var(--border-color); white-space: nowrap; color: var(--text-main); }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+
+        .modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.65); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 16px; backdrop-filter: blur(4px); }
+        .modal-backdrop.active { display: flex !important; }
+        .modal-box { background: var(--bg-card); border-radius: var(--radius-lg); max-width: 580px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); }
+        .modal-header { padding: 18px 22px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .modal-title { font-weight: 900; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        .modal-close { background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-muted); }
+        .modal-body { padding: 22px; }
+        .modal-footer { padding: 16px 22px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background: var(--bg-body); }
+
+        @media (max-width: 768px) {
+            aside { display: none; }
+            .mobile-bottom-nav { display: flex; }
+            main { padding: 14px; padding-bottom: 90px; }
+            .hero-cta-grid { grid-template-columns: 1fr; }
+            .grid-stats { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div style="flex: 1;"></div>
+        <div style="text-align: center; font-weight: 800; font-size: 1.1rem; white-space: nowrap;">
+            ☕ GASTRO KAFE ZAYİ & MALİYET
+            <div id="syncBadge" style="font-size:0.7rem; color:#4caf50; font-weight:bold;">🟢 Firebase Canlı Bağlantı Aktif</div>
+        </div>
+        <div style="flex: 1; display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+            <button class="btn btn-outline btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.3)" onclick="toggleTheme()">🌓 Tema</button>
         </div>
     </header>
 
-    <div class="max-w-md mx-auto p-4 space-y-6">
+    <div class="app-layout">
+        <!-- SIDEBAR -->
+        <aside class="no-print">
+            <button class="nav-link active" onclick="navigate('dashboard')"><span>📊</span> Panel & Özet</button>
+            <button class="nav-link" onclick="navigate('materials')"><span>📦</span> Hammadde & Stok</button>
+            <button class="nav-link" onclick="navigate('waste')"><span>🗑️</span> Zayi Kayıtları</button>
+            <button class="nav-link" onclick="navigate('recipes')"><span>📜</span> Reçete & Maliyet</button>
+            <button class="nav-link" onclick="navigate('settings')"><span>⚙️️</span> Ayarlar & Veri</button>
+        </aside>
 
-        <!-- STOK YÖNETİMİ -->
-        <section class="bg-white p-4 rounded-xl shadow">
-            <h2 class="text-lg font-bold mb-3 border-b pb-2 text-indigo-700">📦 Stok Ekle / Güncelle</h2>
-            <form id="stok-form" class="space-y-3">
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">Ürün / Malzeme Adı</label>
-                    <input type="text" id="stok-ad" required placeholder="Örn: Süt, Kahve Çekirdeği" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
+        <!-- MAIN CONTAINER -->
+        <main>
+            <!-- HERO CTA BUTONLARI -->
+            <div class="hero-cta-grid no-print">
+                <div class="cta-card" onclick="openWasteModal()">
+                    <div class="cta-icon" style="background:var(--danger)">🗑️</div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-600">Miktar</label>
-                        <input type="number" step="0.01" id="stok-miktar" required placeholder="Örn: 10" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600">Birim</label>
-                        <select id="stok-birim" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                            <option value="Kg">Kg</option>
-                            <option value="Litre">Litre</option>
-                            <option value="Adet">Adet</option>
-                            <option value="Gram">Gram</option>
-                        </select>
+                        <div class="cta-title">+ Zayi Ekle</div>
+                        <div class="cta-desc">Dökülme, SKT, hatalı imalat, ikram</div>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg transition">
-                    Stok Kaydet / Güncelle
-                </button>
-            </form>
-        </section>
-
-        <!-- STOK LİSTESİ -->
-        <section class="bg-white p-4 rounded-xl shadow">
-            <h2 class="text-lg font-bold mb-3 border-b pb-2 text-indigo-700">📊 Canlı Stok Listesi</h2>
-            <div id="stok-listesi" class="space-y-2 text-sm text-gray-600">
-                Veriler yükleniyor...
+                <div class="cta-card" onclick="openStockModal()">
+                    <div class="cta-icon" style="background:var(--success)">📦</div>
+                    <div>
+                        <div class="cta-title">+ Stok Girişi</div>
+                        <div class="cta-desc">Yeni fatura veya mal alımı kaydı</div>
+                    </div>
+                </div>
+                <div class="cta-card" onclick="navigate('recipes')">
+                    <div class="cta-icon" style="background:var(--primary)">🧮</div>
+                    <div>
+                        <div class="cta-title">Maliyet Hesapla</div>
+                        <div class="cta-desc">Zayi dahil GERÇEK ürün maliyeti</div>
+                    </div>
+                </div>
             </div>
-        </section>
 
+            <!-- TAB 1: DASHBOARD -->
+            <div id="tab-dashboard" class="tab-page">
+                <div class="grid-stats">
+                    <div class="stat-card danger">
+                        <div class="stat-label">Toplam Zayi Kaybı</div>
+                        <div class="stat-value" id="stat-waste-total">0,00 ₺</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-label">Toplam Stok Değeri</div>
+                        <div class="stat-value" id="stat-stock-value">0,00 ₺</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><div class="card-title">🔥 Son Zayi Kayıtları (Canlı)</div></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Tarih</th><th>Ürün</th><th>Miktar</th><th>Neden</th><th>Tutar</th></tr>
+                            </thead>
+                            <tbody id="dashWasteBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: HAMMADDE / STOK -->
+            <div id="tab-materials" class="tab-page" style="display:none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">📦 Hammadde ve Stok Yönetimi</div>
+                        <button class="btn btn-primary" onclick="openStockModal()">+ Yeni Hammadde / Stok Ekle</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Hammadde Adı</th><th>Mevcut Stok</th><th>Birim Fiyat</th><th>İşlem</th></tr>
+                            </thead>
+                            <tbody id="materialsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: ZAYİ -->
+            <div id="tab-waste" class="tab-page" style="display:none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">🗑️ Tüm Zayi Kayıtları</div>
+                        <button class="btn btn-danger" onclick="openWasteModal()">+ Zayi Gir</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Tarih</th><th>Ürün</th><th>Miktar</th><th>Neden</th><th>Maliyet Kaybı</th><th>İşlem</th></tr>
+                            </thead>
+                            <tbody id="wasteTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: REÇETELER -->
+            <div id="tab-recipes" class="tab-page" style="display:none;">
+                <div class="card">
+                    <div class="card-header"><div class="card-title">📜 Reçete ve Ürün Listesi</div></div>
+                    <p style="color:var(--text-muted)">Ayrıntılı reçete maliyet hesaplamaları eklenen hammaddelere göre otomatik eşleşir.</p>
+                </div>
+            </div>
+
+            <!-- TAB 5: AYARLAR -->
+            <div id="tab-settings" class="tab-page" style="display:none;">
+                <div class="card">
+                    <div class="card-header"><div class="card-title">⚙️ Veritabanı Durumu</div></div>
+                    <p>Uygulama Firebase Realtime Database bulut sunucusuna canlı olarak bağlıdır.</p>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- Firebase Bağlantı Kodu -->
+    <!-- MOBİL BOTTOM NAV -->
+    <div class="mobile-bottom-nav no-print">
+        <button class="mobile-nav-item active" onclick="navigate('dashboard')"><span class="icon">📊</span><span>Panel</span></button>
+        <button class="mobile-nav-item" onclick="navigate('materials')"><span class="icon">📦</span><span>Stok</span></button>
+        <button class="mobile-nav-item" onclick="openWasteModal()"><span class="icon" style="color:var(--danger)">🗑️</span><span>Zayi</span></button>
+        <button class="mobile-nav-item" onclick="navigate('settings')"><span class="icon">⚙️</span><span>Ayarlar</span></button>
+    </div>
+
+    <!-- STOK MODAL -->
+    <div id="modalStock" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">📦 Stok / Hammadde Ekle</div>
+                <button class="modal-close" onclick="closeModal('modalStock')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Ürün Adı</label>
+                    <input type="text" id="stkAd" class="form-control" placeholder="Örn: Espresso Çekirdeği, Tam Yağlı Süt">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Miktar</label>
+                    <input type="number" step="any" id="stkMiktar" class="form-control" placeholder="Örn: 10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Birim Fiyat (₺)</label>
+                    <input type="number" step="any" id="stkFiyat" class="form-control" placeholder="Örn: 250">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveStock()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZAYİ MODAL -->
+    <div id="modalWaste" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">🗑️ Zayi Ekle</div>
+                <button class="modal-close" onclick="closeModal('modalWaste')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Zayi Edilen Ürün</label>
+                    <select id="wItemSelect" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Miktar</label>
+                    <input type="number" step="any" id="wAmount" class="form-control" placeholder="Örn: 1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Zayi Nedeni</label>
+                    <select id="wReason" class="form-control">
+                        <option value="Dökülme / Kaza">Dökülme / Kaza</option>
+                        <option value="SKT Doldu">SKT Doldu</option>
+                        <option value="Hatalı İmalat">Hatalı İmalat</option>
+                        <option value="Personel İkramı">Personel İkramı</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="saveWaste()">Zayi Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE KODLARI & SCRIPT -->
     <script>
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCSwg7TWH__ZaPVlvpFOI3s_mUJn0mhUfk",
             authDomain: "gastro-kafe.firebaseapp.com",
@@ -75,84 +338,137 @@
             databaseURL: "https://gastro-kafe-default-rtdb.firebaseio.com"
         };
 
-        // Firebase Başlat
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const stokRef = database.ref('stoklar');
+        const db = firebase.database();
 
-        const statusBadge = document.getElementById('status-badge');
-        const stokForm = document.getElementById('stok-form');
-        const stokListesi = document.getElementById('stok-listesi');
+        let materialsData = {};
+        let wasteData = {};
 
-        // Bağlantı Durumu
-        database.ref('.info/connected').on('value', (snap) => {
-            if (snap.val() === true) {
-                statusBadge.textContent = '🟢 Canlı Ortak Bağlantı Aktif';
-                statusBadge.className = 'mt-1 text-xs bg-green-800 text-green-200 inline-block px-3 py-1 rounded-full';
-            } else {
-                statusBadge.textContent = '🔴 Bağlantı Kesildi / Bekleniyor';
-                statusBadge.className = 'mt-1 text-xs bg-red-800 text-red-200 inline-block px-3 py-1 rounded-full';
-            }
-        });
+        // Sayfa Gezinme
+        function navigate(tab) {
+            document.querySelectorAll('.tab-page').forEach(p => p.style.display = 'none');
+            document.querySelectorAll('.nav-link, .mobile-nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).style.display = 'block';
+        }
 
-        // Stok Ekle / Güncelle
-        stokForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const ad = document.getElementById('stok-ad').value.trim();
-            const miktar = parseFloat(document.getElementById('stok-miktar').value);
-            const birim = document.getElementById('stok-birim').value;
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        }
+
+        function openStockModal() { document.getElementById('modalStock').classList.add('active'); }
+        function openWasteModal() { document.getElementById('modalWaste').classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // Stok Kaydet
+        function saveStock() {
+            const ad = document.getElementById('stkAd').value.trim();
+            const miktar = parseFloat(document.getElementById('stkMiktar').value);
+            const fiyat = parseFloat(document.getElementById('stkFiyat').value) || 0;
 
             if (ad && !isNaN(miktar)) {
-                stokRef.child(ad).set({
-                    miktar: miktar,
-                    birim: birim,
-                    guncellemeTarihi: new Date().toLocaleString('tr-TR')
-                }).then(() => {
-                    stokForm.reset();
-                }).catch((err) => {
-                    alert("Veri kaydedilemedi: " + err.message);
+                db.ref('stoklar/' + ad).set({ miktar, fiyat, tarih: new Date().toLocaleDateString('tr-TR') })
+                .then(() => {
+                    closeModal('modalStock');
+                    document.getElementById('stkAd').value = '';
+                    document.getElementById('stkMiktar').value = '';
+                    document.getElementById('stkFiyat').value = '';
                 });
             }
+        }
+
+        // Zayi Kaydet
+        function saveWaste() {
+            const urun = document.getElementById('wItemSelect').value;
+            const miktar = parseFloat(document.getElementById('wAmount').value);
+            const neden = document.getElementById('wReason').value;
+
+            if (urun && !isNaN(miktar)) {
+                const birimFiyat = (materialsData[urun] && materialsData[urun].fiyat) ? materialsData[urun].fiyat : 0;
+                const tutar = miktar * birimFiyat;
+
+                db.ref('zayiler').push({
+                    urun, miktar, neden, tutar, tarih: new Date().toLocaleString('tr-TR')
+                }).then(() => {
+                    // Stoktan da düş
+                    if (materialsData[urun]) {
+                        const yeniMiktar = Math.max(0, materialsData[urun].miktar - miktar);
+                        db.ref('stoklar/' + urun + '/miktar').set(yeniMiktar);
+                    }
+                    closeModal('modalWaste');
+                    document.getElementById('wAmount').value = '';
+                });
+            }
+        }
+
+        // CANLI VERİ DİNLEYİCİLERİ (Realtime)
+        db.ref('stoklar').on('value', snap => {
+            materialsData = snap.val() || {};
+            renderMaterials();
+            updateSelectOptions();
         });
 
-        // Canlı Veri Dinleyici (Tüm cihazlarda anında güncellenir)
-        stokRef.on('value', (snapshot) => {
-            stokListesi.innerHTML = '';
-            const data = snapshot.val();
+        db.ref('zayiler').on('value', snap => {
+            wasteData = snap.val() || {};
+            renderWaste();
+        });
 
-            if (!data) {
-                stokListesi.innerHTML = '<p class="text-gray-400 italic">Henüz stok girilmemiş.</p>';
-                return;
-            }
+        function renderMaterials() {
+            const body = document.getElementById('materialsTableBody');
+            body.innerHTML = '';
+            let toplamStokDegeri = 0;
 
-            for (let urunAdi in data) {
-                const urun = data[urunAdi];
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200';
-                div.innerHTML = `
-                    <div>
-                        <span class="font-bold text-gray-800 block">${urunAdi}</span>
-                        <span class="text-xs text-gray-400">${urun.guncellemeTarihi || ''}</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full text-sm">
-                            ${urun.miktar} ${urun.birim}
-                        </span>
-                        <button onclick="stokSil('${urunAdi}')" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 p-2 rounded">
-                            Sil
-                        </button>
-                    </div>
+            for (let ad in materialsData) {
+                const item = materialsData[ad];
+                const deg = item.miktar * (item.fiyat || 0);
+                toplamStokDegeri += deg;
+
+                body.innerHTML += `
+                    <tr>
+                        <td><strong>${ad}</strong></td>
+                        <td>${item.miktar}</td>
+                        <td>${item.fiyat || 0} ₺</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="db.ref('stoklar/${ad}').remove()">Sil</button></td>
+                    </tr>
                 `;
-                stokListesi.appendChild(div);
             }
-        });
+            document.getElementById('stat-stock-value').textContent = toplamStokDegeri.toFixed(2) + ' ₺';
+        }
 
-        // Stok Sil
-        window.stokSil = function(urunAdi) {
-            if (confirm(`${urunAdi} stoktan silinsin mi?`)) {
-                stokRef.child(urunAdi).remove();
+        function renderWaste() {
+            const body = document.getElementById('wasteTableBody');
+            const dashBody = document.getElementById('dashWasteBody');
+            body.innerHTML = '';
+            dashBody.innerHTML = '';
+            let toplamZayi = 0;
+
+            for (let id in wasteData) {
+                const w = wasteData[id];
+                toplamZayi += (w.tutar || 0);
+
+                const row = `
+                    <tr>
+                        <td>${w.tarih}</td>
+                        <td><strong>${w.urun}</strong></td>
+                        <td>${w.miktar}</td>
+                        <td><span class="badge badge-danger">${w.neden}</span></td>
+                        <td>${(w.tutar || 0).toFixed(2)} ₺</td>
+                        <td><button class="btn btn-outline btn-sm" onclick="db.ref('zayiler/${id}').remove()">Sil</button></td>
+                    </tr>
+                `;
+                body.innerHTML += row;
+                dashBody.innerHTML += row;
             }
-        };
+            document.getElementById('stat-waste-total').textContent = toplamZayi.toFixed(2) + ' ₺';
+        }
+
+        function updateSelectOptions() {
+            const select = document.getElementById('wItemSelect');
+            select.innerHTML = '';
+            for (let ad in materialsData) {
+                select.innerHTML += `<option value="${ad}">${ad} (Mevcut: ${materialsData[ad].miktar})</option>`;
+            }
+        }
     </script>
 </body>
 </html>
