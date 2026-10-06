@@ -27,7 +27,9 @@
             --danger-bg: #331816;
             --radius-sm: 8px;
             --radius-md: 12px;
+            --radius-lg: 16px;
             --shadow: 0 4px 12px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
             --font-family: system-ui, -apple-system, sans-serif;
         }
 
@@ -41,14 +43,11 @@
         .header-actions { display: flex; gap: 10px; align-items: center; }
 
         .app-container { display: flex; flex: 1; position: relative; }
-
-        /* SIDEBAR / DESKTOP NAV */
         aside { width: 240px; background: var(--bg-sidebar); padding: 20px 10px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
         .nav-btn { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius-sm); color: #c5b8ad; background: transparent; border: none; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-align: left; transition: all 0.2s; width: 100%; }
         .nav-btn:hover, .nav-btn.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
         .nav-btn.active { background: var(--primary); color: #fff; }
 
-        /* MOBILE BOTTOM NAV */
         .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-sidebar); border-top: 1px solid var(--border); z-index: 100; padding: 6px 0; justify-content: space-around; }
         .mobile-nav-btn { display: flex; flex-direction: column; align-items: center; gap: 2px; color: #a6988d; background: none; border: none; font-size: 0.75rem; padding: 6px 12px; cursor: pointer; }
         .mobile-nav-btn.active { color: var(--accent); font-weight: 700; }
@@ -56,7 +55,6 @@
 
         main { flex: 1; padding: 20px; max-width: 1280px; margin: 0 auto; width: 100%; padding-bottom: 90px; }
 
-        /* CARDS & GRID */
         .card { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 20px; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .card-title { font-size: 1.15rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
@@ -73,7 +71,6 @@
         .stat-value { font-size: 1.6rem; font-weight: 800; margin: 6px 0; color: var(--text-main); }
         .stat-sub { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
 
-        /* BUTTONS & INPUTS */
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; min-height: 44px; }
         .btn-primary { background: var(--primary); color: #fff; }
         .btn-primary:hover { background: var(--primary-hover); }
@@ -83,33 +80,55 @@
         .btn-danger { background: var(--danger); color: #fff; }
         .btn-sm { padding: 6px 12px; min-height: 32px; font-size: 0.85rem; }
 
-        .form-group { margin-bottom: 14px; }
-        .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
-        .form-control { width: 100%; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-primary); color: var(--text-main); font-size: 0.95rem; outline: none; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; color: var(--text-main); }
+        .form-control { width: 100%; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-size: 1rem; outline: none; transition: border 0.2s; }
         .form-control:focus { border-color: var(--primary); }
 
-        /* TABLES */
-        .table-wrap { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        th { background: var(--accent-light); padding: 12px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
-        td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+        .hero-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .hero-btn { background: var(--bg-card); border: 2px solid var(--primary); border-radius: var(--radius-lg); padding: 20px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow); }
+        .hero-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); background: var(--accent-light); }
+        .hero-btn-icon { width: 50px; height: 50px; border-radius: 14px; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+        .hero-btn-text div:first-child { font-weight: 800; font-size: 1.1rem; color: var(--text-main); }
+        .hero-btn-text div:last-child { font-size: 0.82rem; color: var(--text-muted); }
 
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
-        .badge-danger { background: var(--danger-bg); color: var(--danger); }
+        .table-responsive { overflow-x: auto; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem; }
+        th { background: var(--accent-light); padding: 12px 14px; font-weight: 700; color: var(--text-main); border-bottom: 2px solid var(--border); white-space: nowrap; }
+        td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 12px; font-size: 0.78rem; font-weight: 700; }
         .badge-success { background: var(--success-bg); color: var(--success); }
+        .badge-warning { background: var(--warning-bg); color: var(--warning); }
+        .badge-danger { background: var(--danger-bg); color: var(--danger); }
+        .badge-info { background: var(--accent-light); color: var(--primary); }
 
-        /* MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
-        .modal.active { display: flex; }
-        .modal-content { background: var(--bg-card); border-radius: var(--radius-md); width: 100%; max-width: 500px; border: 1px solid var(--border); box-shadow: var(--shadow); }
-        .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px; backdrop-filter: blur(3px); }
+        .modal-overlay.active { display: flex !important; }
+        .modal { background: var(--bg-card); border-radius: var(--radius-lg); max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+        .modal-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-title { font-weight: 800; font-size: 1.2rem; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted); }
         .modal-body { padding: 20px; }
+        .modal-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+
+        .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+        .quick-btn { padding: 10px; border: 1px solid var(--border); background: var(--bg-primary); border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; text-align: center; color: var(--text-main); }
+        
+        .reason-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+        .reason-card { border: 1px solid var(--border); padding: 10px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.88rem; background: var(--bg-primary); }
+        .reason-card.selected { border-color: var(--accent); background: var(--accent-light); }
+
+        .onboarding { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: #fff; border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .onboarding-steps { display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; }  
+        .onboarding-step { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; }
 
         @media (max-width: 768px) {
             aside { display: none; }
             .mobile-nav { display: flex; }
+            main { padding: 12px; padding-bottom: 90px; }
             .grid-4 { grid-template-columns: repeat(2, 1fr); }
-            .grid-2 { grid-template-columns: 1fr; }
+            .hero-actions { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -122,180 +141,255 @@
             <span>GASTRO KAFE ZAYİ & MALİYET</span>
         </div>
         <div class="header-actions">
-            <span id="syncBadge" class="badge badge-success" style="font-size:0.75rem;">🟢 Canlı Ortak Bağlantı</span>
+            <span class="badge badge-success">🟢 Firebase Canlı Senkronize</span>
         </div>
     </header>
 
     <div class="app-container">
-        <!-- SIDEBAR -->
-        <aside>
+        <!-- SIDEBAR (DESKTOP) -->
+        <aside class="no-print">
             <button class="nav-btn active" onclick="switchTab('dashboard')"><span>📊</span> Panel & Özet</button>
             <button class="nav-btn" onclick="switchTab('materials')"><span>📦</span> Hammadde & Stok</button>
             <button class="nav-btn" onclick="switchTab('waste')"><span>🗑️</span> Zayi Kayıtları</button>
             <button class="nav-btn" onclick="switchTab('recipes')"><span>📜</span> Reçete & Maliyet</button>
             <button class="nav-btn" onclick="switchTab('reports')"><span>📈</span> Raporlar & Analiz</button>
+            <button class="nav-btn" onclick="switchTab('settings')"><span>⚙️</span> Ayarlar & Veri</button>
         </aside>
 
-        <!-- MAIN CONTENT -->
+        <!-- MAIN CONTENT AREA -->
         <main>
-            <!-- CTA BUTTONS -->
-            <div class="grid-2" style="margin-bottom: 20px;">
-                <button class="btn btn-danger" style="font-size: 1.05rem; padding: 16px;" onclick="openModal('modalWaste')">
-                    🗑️ + Zayi Ekle (Dökülme, SKT, İkram)
-                </button>
-                <button class="btn btn-primary" style="font-size: 1.05rem; padding: 16px;" onclick="openModal('modalStock')">
-                    📦 + Stok Girişi Yap
-                </button>
+            <!-- REHBER BANT (ONBOARDING) -->
+            <div id="onboardingBanner" class="onboarding no-print">
+                <div>
+                    <h3 style="font-size:1.1rem; margin-bottom:4px;">🚀 5 Dakikada Zayi ve Maliyet Takibine Başlayın</h3>
+                    <p style="font-size:0.88rem; opacity:0.9;">Zayileri kontrol altına alarak kafe kârlılığınızı %15'e kadar artırabilirsiniz.</p>
+                    <div class="onboarding-steps">
+                        <div class="onboarding-step">1. Hammaddeleri Gir</div>
+                        <div class="onboarding-step">2. Reçeteleri Tanımla</div>
+                        <div class="onboarding-step">3. Zayi & Fire Kaydet</div>
+                        <div class="onboarding-step">4. Gerçek Kârı Gör</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- DASHBOARD TAB -->
+            <!-- HERO QUICK ACTION BUTTONS -->
+            <div class="hero-actions no-print">
+                <div class="hero-btn" onclick="openQuickWasteModal()">
+                    <div class="hero-btn-icon" style="background:var(--danger)">🗑️</div>
+                    <div class="hero-btn-text">
+                        <div>+ Zayi Ekle</div>
+                        <div>Dökülme, SKT, hatalı imalat, ikram</div>
+                    </div>
+                </div>
+                <div class="hero-btn" onclick="openStockEntryModal()">
+                    <div class="hero-btn-icon" style="background:var(--success)">📦</div>
+                    <div class="hero-btn-text">
+                        <div>+ Stok Girişi</div>
+                        <div>Yeni fatura veya mal alımı kaydı</div>
+                    </div>
+                </div>
+                <div class="hero-btn" onclick="switchTab('recipes')">
+                    <div class="hero-btn-icon" style="background:var(--primary)">🧮</div>
+                    <div class="hero-btn-text">
+                        <div>Maliyet Hesapla</div>
+                        <div>Zayi dahil GERÇEK ürün maliyeti</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 1: DASHBOARD -->
             <div id="tab-dashboard" class="tab-content">
                 <div class="grid-4">
                     <div class="stat-card danger">
                         <div class="stat-title">Toplam Zayi Kaybı</div>
-                        <div class="stat-value" id="stat-waste">0,00 ₺</div>
-                        <div class="stat-sub">Canlı veritabanı senkronize</div>
+                        <div class="stat-value" id="dash-waste-total">0,00 ₺</div>
+                        <div class="stat-sub">0 kayıt</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-title">Önlenebilir Zayi Tutarı</div>
+                        <div class="stat-value" id="dash-preventable-val">0,00 ₺</div>
+                        <div class="stat-sub">%0 kadarı kurtarılabilir</div>
                     </div>
                     <div class="stat-card success">
                         <div class="stat-title">Toplam Stok Değeri</div>
-                        <div class="stat-value" id="stat-stock">0,00 ₺</div>
-                        <div class="stat-sub" id="stat-stock-count">0 hammadde</div>
+                        <div class="stat-value" id="dash-stock-value">0,00 ₺</div>
+                        <div class="stat-sub" id="dash-stock-count">0 kalem hammadde</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Ortalama Gerçek Maliyet Oranı</div>
+                        <div class="stat-value" id="dash-margin-avg">%0,0</div>
+                        <div class="stat-sub">Zayi etkisi dahil maliyet</div>
+                    </div>
+                </div>
+
+                <!-- TASARRUF SIMÜLATÖRÜ -->
+                <div class="card" style="background:var(--accent-light); border-color:var(--primary);">
+                    <div style="display:flex; align-items:center; gap:14px;">
+                        <span style="font-size:32px;">💡</span>
+                        <div>
+                            <h4 style="font-weight:800;">Zayi Tasarruf Fırsatı</h4>
+                            <p style="font-size:0.9rem; margin-top:2px;">Zayileri %20 oranında azaltırsanız bu ay yaklaşık <strong id="savingsText">0,00 ₺</strong> ekstra net kâr elde edebilirsiniz.</p>
+                        </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">🔥 Son Zayi Kayıtları</div>
-                    </div>
-                    <div class="table-wrap">
+                    <div class="card-header"><div class="card-title">🚨 Akıllı Uyarılar & Kritik Durumlar</div></div>
+                    <div id="dash-alerts-list"><p style="color:var(--text-muted);">Tüm stok seviyeleri ve zayi durumları normal.</p></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><div class="card-title">🔥 En Çok Para Kaybettiren 5 Zayi Kalemi</div></div>
+                    <div class="table-responsive">
                         <table>
                             <thead>
-                                <tr><th>Tarih</th><th>Ürün</th><th>Miktar</th><th>Neden</th><th>Tutar</th></tr>
+                                <tr><th>Ürün / Hammadde</th><th>Zayi Miktarı</th><th>Toplam Maliyet Kaybı</th><th>En Sık Neden</th></tr>
                             </thead>
-                            <tbody id="dashWasteTable"></tbody>
+                            <tbody id="dash-top-waste-table"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- MATERIALS TAB -->
+            <!-- TAB 2: HAMMADDE & STOK -->
             <div id="tab-materials" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">📦 Hammadde ve Stok Yönetimi</div>
-                        <button class="btn btn-primary btn-sm" onclick="openModal('modalStock')">+ Yeni Stok Ekle</button>
+                        <button class="btn btn-primary" onclick="openMaterialModal()">+ Yeni Hammadde Ekle</button>
                     </div>
-                    <div class="table-wrap">
+                    <div class="table-responsive">
                         <table>
                             <thead>
-                                <tr><th>Hammadde Adı</th><th>Mevcut Stok</th><th>Birim Fiyat</th><th>İşlem</th></tr>
+                                <tr><th>Hammadde Adı</th><th>Kategori</th><th>Mevcut Stok</th><th>Paket Alış Fiyatı</th><th>Temel Birim Maliyeti</th><th>İşlemler</th></tr>
                             </thead>
-                            <tbody id="materialsTable"></tbody>
+                            <tbody id="materials-table-body"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- WASTE TAB -->
+            <!-- TAB 3: ZAYİ KAYITLARI -->
             <div id="tab-waste" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">🗑️ Zayi ve İsraf Kayıtları</div>
-                        <button class="btn btn-danger btn-sm" onclick="openModal('modalWaste')">+ Zayi Gir</button>
+                        <button class="btn btn-danger" onclick="openQuickWasteModal()">+ Zayi Ekle</button>
                     </div>
-                    <div class="table-wrap">
+                    <div class="table-responsive">
                         <table>
                             <thead>
-                                <tr><th>Tarih</th><th>Ürün</th><th>Miktar</th><th>Neden</th><th>Maliyet</th><th>İşlem</th></tr>
+                                <tr><th>Tarih / Saat</th><th>Ürün / Hammadde</th><th>Miktar</th><th>Neden</th><th>Maliyet Kaybı</th><th>İşlem</th></tr>
                             </thead>
-                            <tbody id="wasteTable"></tbody>
+                            <tbody id="waste-table-body"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- RECIPES TAB -->
+            <!-- TAB 4: REÇETE -->
             <div id="tab-recipes" class="tab-content" style="display:none;">
                 <div class="card">
-                    <div class="card-header"><div class="card-title">📜 Reçete ve Maliyet Hesaplayıcı</div></div>
-                    <p style="color:var(--text-muted)">Stok listenize eklenen malzemeler üzerinden canlı reçete maliyetleri hesaplanır.</p>
+                    <div class="card-header"><div class="card-title">📜 Reçeteler ve Zayi Dahil GERÇEK Maliyet</div></div>
+                    <p style="color:var(--text-muted)">Stok hammaddelerinize bağlı reçeteler canlı Firebase sunucusu üzerinden hesaplanır.</p>
                 </div>
             </div>
 
-            <!-- REPORTS TAB -->
+            <!-- TAB 5: RAPORLAR -->
             <div id="tab-reports" class="tab-content" style="display:none;">
                 <div class="card">
-                    <div class="card-header"><div class="card-title">📈 Raporlar ve Canlı Veri Analizi</div></div>
-                    <p style="color:var(--text-muted)">Tüm veriler Firebase Realtime Database üzerinde anlık güncellenmektedir.</p>
+                    <div class="card-header"><div class="card-title">📈 Detaylı Zayi ve Kârlılık Raporu</div></div>
+                    <p style="color:var(--text-muted)">Aylık ve günlük zayi analizleri.</p>
+                </div>
+            </div>
+
+            <!-- TAB 6: AYARLAR -->
+            <div id="tab-settings" class="tab-content" style="display:none;">
+                <div class="card">
+                    <div class="card-header"><div class="card-title">⚙️ Sistem Ayarları ve Canlı Veri</div></div>
+                    <p style="color:var(--text-muted)">Ortak Firebase veritabanı aktif.</p>
                 </div>
             </div>
         </main>
     </div>
 
     <!-- MOBILE NAV -->
-    <div class="mobile-nav">
+    <div class="mobile-nav no-print">
         <button class="mobile-nav-btn active" onclick="switchTab('dashboard')"><span class="icon">📊</span><span>Panel</span></button>
         <button class="mobile-nav-btn" onclick="switchTab('materials')"><span class="icon">📦</span><span>Stok</span></button>
-        <button class="mobile-nav-btn" onclick="openModal('modalWaste')"><span class="icon" style="color:var(--danger)">🗑️</span><span>Zayi Gir</span></button>
+        <button class="mobile-nav-btn" onclick="openQuickWasteModal()"><span class="icon" style="color:var(--danger)">🗑️</span><span>Zayi Gir</span></button>
         <button class="mobile-nav-btn" onclick="switchTab('recipes')"><span class="icon">📜</span><span>Reçete</span></button>
-    </div>
-
-    <!-- MODAL: STOK -->
-    <div id="modalStock" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📦 Stok / Hammadde Ekle</h3>
-                <button style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;" onclick="closeModal('modalStock')">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Ürün / Malzeme Adı</label>
-                    <input type="text" id="stkName" class="form-control" placeholder="Örn: Espresso Çekirdeği, Süt">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Miktar</label>
-                    <input type="number" step="any" id="stkAmount" class="form-control" placeholder="Örn: 10">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Birim Fiyat (₺)</label>
-                    <input type="number" step="any" id="stkPrice" class="form-control" placeholder="Örn: 250">
-                </div>
-                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="addStock()">Kaydet</button>
-            </div>
-        </div>
+        <button class="mobile-nav-btn" onclick="switchTab('settings')"><span class="icon">⚙️</span><span>Ayarlar</span></button>
     </div>
 
     <!-- MODAL: ZAYİ -->
-    <div id="modalWaste" class="modal">
-        <div class="modal-content">
+    <div id="modal-waste" class="modal-overlay">
+        <div class="modal">
             <div class="modal-header">
-                <h3>🗑️ Zayi Ekle</h3>
-                <button style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;" onclick="closeModal('modalWaste')">✕</button>
+                <div class="modal-title">🗑️ Hızlı Zayi Ekle</div>
+                <button class="modal-close" onclick="closeModal('modal-waste')">✕</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="form-label">Zayi Edilen Ürün</label>
-                    <select id="wItem" class="form-control"></select>
+                    <label class="form-label">Zayi Edilen Hammadde veya Ürün</label>
+                    <select id="w-item" class="form-control"></select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Miktar</label>
-                    <input type="number" step="any" id="wAmount" class="form-control" placeholder="Örn: 1">
+                    <div class="quick-grid">
+                        <button type="button" class="quick-btn" onclick="document.getElementById('w-amount').value=1">1</button>
+                        <button type="button" class="quick-btn" onclick="document.getElementById('w-amount').value=2">2</button>
+                        <button type="button" class="quick-btn" onclick="document.getElementById('w-amount').value=5">5</button>
+                        <button type="button" class="quick-btn" onclick="document.getElementById('w-amount').value=10">10</button>
+                    </div>
+                    <input type="number" id="w-amount" class="form-control" placeholder="Miktar giriniz..." step="any">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Zayi Nedeni</label>
-                    <select id="wReason" class="form-control">
-                        <option value="Dökülme / Kaza">Dökülme / Kaza</option>
-                        <option value="SKT Doldu">SKT Doldu</option>
-                        <option value="Hatalı İmalat">Hatalı İmalat</option>
-                        <option value="Personel İkramı">Personel İkramı</option>
+                    <select id="w-reason" class="form-control">
+                        <option value="Dökülme / Düşürme">Dökülme / Düşürme</option>
+                        <option value="SKT Geçti / Bozuldu">SKT Geçti / Bozuldu</option>
+                        <option value="Hatalı Hazırlık">Hatalı Hazırlık</option>
+                        <option value="İkram / Personel">İkram / Personel</option>
                     </select>
                 </div>
-                <button class="btn btn-danger" style="width:100%; margin-top:10px;" onclick="addWaste()">Zayi Kaydet</button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-waste')">İptal</button>
+                <button class="btn btn-danger" onclick="saveWasteEntry()">Kaydet ve Stoktan Düş</button>
             </div>
         </div>
     </div>
 
-    <!-- FIREBASE & SCRIPT -->
+    <!-- MODAL: HAMMADDE -->
+    <div id="modal-material" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">📦 Hammadde Ekle / Düzenle</div>
+                <button class="modal-close" onclick="closeModal('modal-material')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Hammadde Adı</label>
+                    <input type="text" id="m-name" class="form-control" placeholder="Örn: Espresso Çekirdek">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Paket Alış Fiyatı (₺)</label>
+                    <input type="number" id="m-price" class="form-control" placeholder="0.00" step="any">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mevcut Stok</label>
+                    <input type="number" id="m-stock" class="form-control" placeholder="0.00" step="any">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-material')">İptal</button>
+                <button class="btn btn-primary" onclick="saveMaterial()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE REALTIME SCRIPT -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCSwg7TWH__ZaPVlvpFOI3s_mUJn0mhUfk",
@@ -311,7 +405,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let materials = {};
+        let rawMaterials = {};
         let wastes = {};
 
         function switchTab(tabId) {
@@ -320,52 +414,49 @@
             document.getElementById('tab-' + tabId).style.display = 'block';
         }
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function openQuickWasteModal() { populateDropdown(); document.getElementById('modal-waste').classList.add('active'); }
+        function openStockEntryModal() { openMaterialModal(); }
+        function openMaterialModal() { document.getElementById('modal-material').classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        function addStock() {
-            const name = document.getElementById('stkName').value.trim();
-            const amount = parseFloat(document.getElementById('stkAmount').value);
-            const price = parseFloat(document.getElementById('stkPrice').value) || 0;
+        function saveMaterial() {
+            const name = document.getElementById('m-name').value.trim();
+            const price = parseFloat(document.getElementById('m-price').value) || 0;
+            const stock = parseFloat(document.getElementById('m-stock').value) || 0;
 
-            if (name && !isNaN(amount)) {
-                db.ref('stoklar/' + name).set({ miktar: amount, fiyat: price, tarih: new Date().toLocaleDateString('tr-TR') })
-                .then(() => {
-                    closeModal('modalStock');
-                    document.getElementById('stkName').value = '';
-                    document.getElementById('stkAmount').value = '';
-                    document.getElementById('stkPrice').value = '';
+            if (name) {
+                db.ref('stoklar/' + name).set({ fiyat: price, miktar: stock }).then(() => {
+                    closeModal('modal-material');
+                    document.getElementById('m-name').value = '';
                 });
             }
         }
 
-        function addWaste() {
-            const item = document.getElementById('wItem').value;
-            const amount = parseFloat(document.getElementById('wAmount').value);
-            const reason = document.getElementById('wReason').value;
+        function saveWasteEntry() {
+            const item = document.getElementById('w-item').value;
+            const amount = parseFloat(document.getElementById('w-amount').value);
+            const reason = document.getElementById('w-reason').value;
 
             if (item && !isNaN(amount)) {
-                const price = (materials[item] && materials[item].fiyat) ? materials[item].fiyat : 0;
+                const price = rawMaterials[item] ? rawMaterials[item].fiyat : 0;
                 const cost = amount * price;
 
                 db.ref('zayiler').push({
                     urun: item, miktar: amount, neden: reason, tutar: cost, tarih: new Date().toLocaleString('tr-TR')
                 }).then(() => {
-                    if (materials[item]) {
-                        const newAmount = Math.max(0, materials[item].miktar - amount);
-                        db.ref('stoklar/' + item + '/miktar').set(newAmount);
+                    if (rawMaterials[item]) {
+                        const newStock = Math.max(0, rawMaterials[item].miktar - amount);
+                        db.ref('stoklar/' + item + '/miktar').set(newStock);
                     }
-                    closeModal('modalWaste');
-                    document.getElementById('wAmount').value = '';
+                    closeModal('modal-waste');
                 });
             }
         }
 
-        // REALTIME LISTENERS
         db.ref('stoklar').on('value', snap => {
-            materials = snap.val() || {};
+            rawMaterials = snap.val() || {};
             renderMaterials();
-            updateSelects();
+            populateDropdown();
         });
 
         db.ref('zayiler').on('value', snap => {
@@ -374,38 +465,42 @@
         });
 
         function renderMaterials() {
-            const body = document.getElementById('materialsTable');
-            body.innerHTML = '';
+            const tbody = document.getElementById('materials-table-body');
+            tbody.innerHTML = '';
             let totalVal = 0;
             let count = 0;
 
-            for (let name in materials) {
+            for (let name in rawMaterials) {
                 count++;
-                const item = materials[name];
-                totalVal += (item.miktar * (item.fiyat || 0));
-                body.innerHTML += `
+                const item = rawMaterials[name];
+                const val = item.miktar * item.fiyat;
+                totalVal += val;
+
+                tbody.innerHTML += `
                     <tr>
                         <td><strong>${name}</strong></td>
-                        <td>${item.miktar}</td>
-                        <td>${item.fiyat || 0} ₺</td>
+                        <td><span class="badge badge-info">Genel</span></td>
+                        <td><strong>${item.miktar}</strong></td>
+                        <td>${item.fiyat} ₺</td>
+                        <td>${item.fiyat} ₺</td>
                         <td><button class="btn btn-danger btn-sm" onclick="db.ref('stoklar/${name}').remove()">Sil</button></td>
                     </tr>
                 `;
             }
-            document.getElementById('stat-stock').textContent = totalVal.toFixed(2) + ' ₺';
-            document.getElementById('stat-stock-count').textContent = count + ' hammadde';
+            document.getElementById('dash-stock-value').textContent = totalVal.toFixed(2) + ' ₺';
+            document.getElementById('dash-stock-count').textContent = count + ' kalem hammadde';
         }
 
         function renderWastes() {
-            const body = document.getElementById('wasteTable');
-            const dashBody = document.getElementById('dashWasteTable');
-            body.innerHTML = '';
-            dashBody.innerHTML = '';
-            let totalWaste = 0;
+            const tbody = document.getElementById('waste-table-body');
+            const dashTable = document.getElementById('dash-top-waste-table');
+            tbody.innerHTML = '';
+            dashTable.innerHTML = '';
+            let totalCost = 0;
 
             for (let id in wastes) {
                 const w = wastes[id];
-                totalWaste += (w.tutar || 0);
+                totalCost += (w.tutar || 0);
 
                 const row = `
                     <tr>
@@ -413,21 +508,23 @@
                         <td><strong>${w.urun}</strong></td>
                         <td>${w.miktar}</td>
                         <td><span class="badge badge-danger">${w.neden}</span></td>
-                        <td>${(w.tutar || 0).toFixed(2)} ₺</td>
-                        <td><button class="btn btn-outline btn-sm" onclick="db.ref('zayiler/${id}').remove()">Sil</button></td>
+                        <td style="color:var(--danger); font-weight:bold;">${(w.tutar || 0).toFixed(2)} ₺</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="db.ref('zayiler/${id}').remove()">Sil</button></td>
                     </tr>
                 `;
-                body.innerHTML += row;
-                dashBody.innerHTML += row;
+                tbody.innerHTML += row;
+                dashTable.innerHTML += row;
             }
-            document.getElementById('stat-waste').textContent = totalWaste.toFixed(2) + ' ₺';
+            document.getElementById('dash-waste-total').textContent = totalCost.toFixed(2) + ' ₺';
+            document.getElementById('dash-preventable-val').textContent = (totalCost * 0.8).toFixed(2) + ' ₺';
+            document.getElementById('savingsText').textContent = (totalCost * 0.2).toFixed(2) + ' ₺';
         }
 
-        function updateSelects() {
-            const sel = document.getElementById('wItem');
-            sel.innerHTML = '';
-            for (let name in materials) {
-                sel.innerHTML += `<option value="${name}">${name} (Stok: ${materials[name].miktar})</option>`;
+        function populateDropdown() {
+            const select = document.getElementById('w-item');
+            select.innerHTML = '';
+            for (let name in rawMaterials) {
+                select.innerHTML += `<option value="${name}">${name} (Mevcut: ${rawMaterials[name].miktar})</option>`;
             }
         }
     </script>
